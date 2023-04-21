@@ -13,8 +13,8 @@ def _preprocess_X(X_sparse, y=None, rm_gene=None):
     # compute call rates and remove genes and cells
     if y is not None:
         call_rate = X.mean(axis=1)
-        X = X[call_rate > 0.1, :]
-        y = y[call_rate > 0.1]
+        X = X[call_rate > 0.01, :]
+        y = y[call_rate > 0.01]
         call_rate = X.mean(axis=0)
         X = X[:, call_rate > 0.1]
 
@@ -33,7 +33,9 @@ class Classifier(object):
             StandardScaler(),
             VarianceThreshold(threshold=0.1),
             SelectKBest(f_classif, k=1000),
-            GradientBoostingClassifier(learning_rate=0.1),
+            GradientBoostingClassifier(
+                n_estimators=200, learning_rate=0.1, max_features="sqrt"
+            ),
         )
 
         self.rm_gene = np.array([])

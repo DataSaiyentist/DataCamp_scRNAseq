@@ -6,6 +6,7 @@ import seaborn as sns
 from sklearn.decomposition import PCA
 from sklearn.manifold import TSNE
 
+from sklearn.model_selection import StratifiedKFold
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import balanced_accuracy_score
@@ -185,3 +186,39 @@ def evaluate_model(
 
     # Visualize predicted labels with t-SNE
     plot_tsne(X_test, y_pred)
+
+
+# Cross-validation of all considered models
+def validate_model(X, y, models, kfold=10, is_balanced=False):
+    """Cross-validate ML models"""
+
+    kf = StratifiedKFold(n_splits=kfold, shuffle=True, random_state=42)
+
+    # Accuracy of models
+    train_scores, test_scores = [], []
+    metric = accuracy_score if is_balanced else balanced_accuracy_score
+    for name, model in models.items():
+        # (Stratified) K-fold cross-validation for each model
+        train_scores_cv, test_scores_cv = [], []
+        for train_index, test_index in kf.split(X, y):
+            X_train, X_test = X[train_index], X[test_index]
+            y_train, y_test = y[train_index], y[test_index]
+
+            model.fit(X_train, y_train)
+            train_scores_cv.append(metric(y_train, model.predict(X_train)))
+            test_scores_cv.append(metric(y_test, model.predict(X_test)))
+
+        train_scores.append(train_scores_cv)
+        test_scores.append(test_scores_cv)
+
+    # Plot for each model
+    fig, axs = plt.subplots(nrows=len(models), ncols=2, figsize=(10, 17))
+    for i, (name, model) in enumerate(models.items()):
+        sns.violinplot(data=train_scores[i], ax=axs[i][0], color="orange")
+        axs[i][0].set_title(f"{name} train scores")
+        axs[i][0].xaxis.set_visible(False)
+        sns.violinplot(data=test_scores[i], ax=axs[i][1], color="forestgreen")
+        axs[i][1].set_title(f"{name} test scores")
+        axs[i][1].xaxis.set_visible(False)
+
+    plt.show()
