@@ -12,6 +12,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.metrics import balanced_accuracy_score
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import ConfusionMatrixDisplay
+from sklearn.metrics import roc_curve, auc
 
 
 # Pairplot of PCA components
@@ -56,17 +57,15 @@ def plot_tsne(X, y):
 
 
 # Genes expresssion for each cell
-def plot_cell(X, cell_per_plot=10):
+def plot_cell(X, per_plot=10):
     """Plot genes expression for each cell"""
 
-    sections = np.array_split(X, np.ceil(len(X) / cell_per_plot))
+    sections = np.array_split(X, np.ceil(len(X) / per_plot))
 
     for i, section in enumerate(sections):
         plt.plot(
             section.T,
-            label=[
-                f"Lignes {i*cell_per_plot+j}" for j in range(section.shape[0])
-            ],  # noqa
+            label=[f"Lignes {i*per_plot+j}" for j in range(section.shape[0])],  # noqa
         )
         plt.xlabel("Index of genes")
         plt.ylabel("Values")
@@ -152,9 +151,42 @@ def search_param(
     print(clf.best_params_)  # Best parameters
     # Accuracy of the model with the best parameters
     if is_balanced:
-        print(accuracy_score(y_test, clf.predict(X_test)))
+        print(f"Train: {accuracy_score(y_train, clf.predict(X_train))}")
+        print(f"Test: {accuracy_score(y_test, clf.predict(X_test))}")
     else:
-        print(balanced_accuracy_score(y_test, clf.predict(X_test)))
+        print(
+            f"Train: {balanced_accuracy_score(y_train, clf.predict(X_train))}"
+        )  # noqa
+        print(f"Test: {balanced_accuracy_score(y_test, clf.predict(X_test))}")
+
+
+# ROC curve of a model
+def plot_roc(X, y, model):
+    """Plot the ROC curve of a given ML model"""
+
+    n_classes = len(model.classes_)
+    fpr, tpr, roc_auc = dict(), dict(), dict()
+
+    for i in range(n_classes):
+        fpr[i], tpr[i], _ = roc_curve(
+            y == model.classes_[i], model.predict_proba(X)[:, i]
+        )
+        roc_auc[i] = auc(fpr[i], tpr[i])
+
+    # Plot ROC curves
+    for i in range(n_classes):
+        plt.plot(
+            fpr[i],
+            tpr[i],
+            label=f"AUC = {roc_auc[i]:.2f} for {model.classes_[i]}",  # noqa
+        )
+    plt.plot([0, 1], [0, 1], "k--")
+    plt.xlabel("False Positive Rate")
+    plt.ylabel("True Positive Rate")
+    plt.gca().spines["right"].set_visible(False)
+    plt.gca().spines["top"].set_visible(False)
+    plt.legend(loc="lower right")
+    plt.show()
 
 
 # Model evaluation
@@ -184,6 +216,8 @@ def evaluate_model(
     plt.title(f"{name} Confusion matrix")
     plt.figure(figsize=(7, 4))
 
+    # ROC curve
+    plot_roc(X_test, y_test, model)
     # Visualize predicted labels with t-SNE
     plot_tsne(X_test, y_pred)
 
