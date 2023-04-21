@@ -1,0 +1,22 @@
+# ramp specifics
+ramp-workflow
+osfclient
+
+# generic datascience
+numpy
+scipy
+pandas
+# https://github.com/scverse/scanpy/issues/2411
+matplotlib<3.7 
+seaborn
+jupyterlab
+
+scikit-learn
+#tensorflow
+
+# dev
+flake8
+black
+
+# utils
+scanpy
