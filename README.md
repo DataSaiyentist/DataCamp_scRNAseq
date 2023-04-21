@@ -9,7 +9,7 @@ The purpose of this challenge was to classify cell-types with single-cell RNAseq
 
 - A guide is available in the jupyter notebook `scMARK_classification_starting_kit.ipynb`
 - The data can be downloaded via the python script `download_data.py`
-- The submission files are accessible in the folder `/submissions` and should be in the same format as the `classifier.py` file
+- The submission files are accessible in the folder `/submissions`
 - To better understand our approach, please refer to `preprocess.ipynb` and `model.ipynb`
 
 ## License
