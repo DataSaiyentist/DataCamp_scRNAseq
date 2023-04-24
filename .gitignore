@@ -1,5 +1,6 @@
 # scMARK project
-data/
+# I removed this line in case that the project is no longer accessible
+# data/
 *.html
 
 # PyCharm IDE
