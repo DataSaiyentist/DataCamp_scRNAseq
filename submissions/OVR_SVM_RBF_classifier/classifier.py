@@ -23,7 +23,7 @@ class Classifier(object):
         self.n_genes = n_genes
 
         clf = OneVsRestClassifier(SVC(kernel="rbf", C=8.0, probability=True))
-        # clf = SVC(kernel="rbf",C = 8., probability=True, decision_function_shape="ovo")
+        # clf = SVC(kernel="rbf",C = 8., probability=True, decision_function_shape="ovo") # noqa
         self.clf = clf
 
     def preprocess_fit(self, X, y):

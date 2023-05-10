@@ -65,7 +65,7 @@ jobs:
         if [ -f extra_libraries.txt ]; then pip install -r extra_libraries.txt; fi
     - name: Test pip
       run: |
-        flake8 *.py submissions/*/*.py
+        flake8 --per-file-ignores="classifier.py:F401"
         python download_data.py
         ramp-test --quick-test
         jupyter nbconvert --execute scMARK_classification_starting_kit.ipynb --to html --ExecutePreprocessor.kernel_name=python3 
