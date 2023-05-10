@@ -36,7 +36,9 @@ class Classifier(object):
             SelectKBest(f_classif, k=1000),
         )
 
-        self.svm = SVC(C=10, kernel="linear")
+        self.svm_cancer = SVC(C=10, kernel="linear")
+        self.svm_nk = SVC(C=10, kernel="linear")
+
         self.gb = GradientBoostingClassifier(
             n_estimators=200, learning_rate=0.1, max_features="sqrt"
         )
@@ -48,12 +50,19 @@ class Classifier(object):
         setattr(self, "rm_gene", idx_gene)
         X = self.pipe.fit_transform(X, y)
 
+        # fit svm with Cancer_cells
+        y_svm = y.to_numpy()
+        y_svm[y_svm != "Cancer_cells"] = "other"
+        self.svm_cancer.fit(X, y_svm)
         # fit svm with NK_cells
         y_svm = y.to_numpy()
         y_svm[y_svm != "NK_cells"] = "other"
-        self.svm.fit(X, y_svm)
+        self.svm_nk.fit(X, y_svm)
         # fit gradient boosting with the rest
-        self.gb.fit(X[y != "NK_cells"], y[y != "NK_cells"])
+        self.gb.fit(
+            X[(y != "Cancer_cells") & (y != "NK_cells")],
+            y[(y != "Cancer_cells") & (y != "NK_cells")],
+        )
 
         pass
 
@@ -63,11 +72,12 @@ class Classifier(object):
 
         n, _ = X_sparse.shape
         proba = np.zeros((n, 4))
-        y_svm = self.svm.predict(X)
+        y_svm = self.svm_cancer.predict(X)
+        proba[y_svm == "Cancer_cells", 0] = 1
+        y_svm[y_svm != "Cancer_cells"] = self.svm_nk.predict(X[y_svm != "Cancer_cells"])
         proba[y_svm == "NK_cells", 1] = 1
-        proba_gb = self.gb.predict_proba(X[y_svm != "NK_cells"])
-        proba[y_svm != "NK_cells", 0] = proba_gb[:, 0]
-        proba[y_svm != "NK_cells", 2] = proba_gb[:, 1]
-        proba[y_svm != "NK_cells", 3] = proba_gb[:, 2]
+        proba_gb = self.gb.predict_proba(X[y_svm == "other"])
+        proba[y_svm == "other", 2] = proba_gb[:, 0]
+        proba[y_svm == "other", 3] = proba_gb[:, 1]
 
         return proba

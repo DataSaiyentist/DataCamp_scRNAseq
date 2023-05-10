@@ -4,39 +4,39 @@ Reading cv ...
 Training submissions\SVM_GB_classifier ...
 CV fold 0
 	score  bal_acc      time
-	train     1.00  1.570738
-	valid     0.78  0.089599
-	test      0.78  0.045085
+	train     1.00  0.561630
+	valid     0.78  0.101544
+	test      0.78  0.049602
 CV fold 1
 	score  bal_acc      time
-	train     1.00  1.500435
-	valid     0.82  0.089823
-	test      0.79  0.045101
+	train     1.00  0.470966
+	valid     0.81  0.085955
+	test      0.80  0.053560
 CV fold 2
 	score  bal_acc      time
-	train     1.00  1.481616
-	valid     0.82  0.088513
-	test      0.79  0.044513
+	train     1.00  0.458708
+	valid     0.83  0.093221
+	test      0.80  0.046960
 CV fold 3
 	score  bal_acc      time
-	train     1.00  1.491367
-	valid     0.81  0.114047
-	test      0.81  0.068150
+	train     1.00  0.468390
+	valid     0.83  0.096272
+	test      0.81  0.048289
 CV fold 4
 	score  bal_acc      time
-	train     1.00  2.076984
-	valid     0.84  0.137530
-	test      0.79  0.064994
+	train     1.00  0.468859
+	valid     0.83  0.093206
+	test      0.80  0.046571
 ----------------------------
 Mean CV scores
 ----------------------------
 	score        bal_acc         time
-	train     1.0 +- 0.0  1.6 +- 0.23
-	valid   0.81 +- 0.02  0.1 +- 0.02
-	test   0.79 +- 0.009  0.1 +- 0.01
+	train     1.0 +- 0.0  0.5 +- 0.04
+	valid  0.82 +- 0.021  0.1 +- 0.01
+	test     0.8 +- 0.01   0.0 +- 0.0
 ----------------------------
 Bagged scores
 ----------------------------
 	score  bal_acc
 	valid     0.82
-	test      0.80
+	test      0.81

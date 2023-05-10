@@ -1,0 +1,42 @@
+Testing Single-cell RNA-seq cell types classification
+Reading train and test files from ./data/ ...
+Reading cv ...
+Training submissions\5 ...
+CV fold 0
+	score  bal_acc      time
+	train     1.00  0.608387
+	valid     0.88  0.331862
+	test      0.82  0.165928
+CV fold 1
+	score  bal_acc      time
+	train     1.00  0.540445
+	valid     0.84  0.337711
+	test      0.84  0.167389
+CV fold 2
+	score  bal_acc      time
+	train     1.00  0.531825
+	valid     0.88  0.341031
+	test      0.84  0.169808
+CV fold 3
+	score  bal_acc      time
+	train     1.00  0.534541
+	valid     0.89  0.341394
+	test      0.84  0.170231
+CV fold 4
+	score  bal_acc      time
+	train     1.00  0.542835
+	valid     0.86  0.341076
+	test      0.83  0.168648
+----------------------------
+Mean CV scores
+----------------------------
+	score        bal_acc         time
+	train     1.0 +- 0.0  0.6 +- 0.03
+	valid  0.87 +- 0.018   0.3 +- 0.0
+	test   0.83 +- 0.005   0.2 +- 0.0
+----------------------------
+Bagged scores
+----------------------------
+	score  bal_acc
+	valid     0.87
+	test      0.84
