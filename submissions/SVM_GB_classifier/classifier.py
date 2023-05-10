@@ -74,7 +74,9 @@ class Classifier(object):
         proba = np.zeros((n, 4))
         y_svm = self.svm_cancer.predict(X)
         proba[y_svm == "Cancer_cells", 0] = 1
-        y_svm[y_svm != "Cancer_cells"] = self.svm_nk.predict(X[y_svm != "Cancer_cells"])
+        y_svm[y_svm != "Cancer_cells"] = self.svm_nk.predict(
+            X[y_svm != "Cancer_cells"]
+        )  # noqa
         proba[y_svm == "NK_cells", 1] = 1
         proba_gb = self.gb.predict_proba(X[y_svm == "other"])
         proba[y_svm == "other", 2] = proba_gb[:, 0]
